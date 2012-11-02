@@ -10,8 +10,12 @@ function generatePassword($options = array()) {
 		'lowercase' => array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'),
 		'uppercase'	=> array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'),
 		'digits'	=> array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
-		'specials'	=> array('-', '_', '/', '\\')
+		'specials'	=> array('-', '_', '/', '\\', '.', '"', "'", ';')
 	);
+	
+	if(isset($options['myCharacters']) && is_array($options['myCharacters'])) {
+		$characterGroups[] = $options['myCharacters'];
+	}
 	
 	$selectedGroups = array();
 	foreach(array_keys($characterGroups) as $groupName) {
@@ -53,5 +57,5 @@ function generatePassword($options = array()) {
 	return implode('', $password);
 }
 
-echo generatePassword(array('specials' => false, 'length' => 16 )) . PHP_EOL;
+echo generatePassword(array('specials' => false, 'length' => 16)) . PHP_EOL;
 ?>
