@@ -14,17 +14,10 @@ function generatePassword($options = array()) {
 	);
 	
 	$selectedGroups = array();
-	if(!isset($options['lowercase']) || true == $options['lowercase']) {
-		$selectedGroups[] = 'lowercase';
-	}
-	if(!isset($options['uppercase']) || true == $options['uppercase']) {
-		$selectedGroups[] = 'uppercase';
-	}
-	if(!isset($options['digits']) || true == $options['digits']) {
-		$selectedGroups[] = 'digits';
-	}
-	if(!isset($options['specials']) || true == $options['specials']) {
-		$selectedGroups[] = 'specials';
+	foreach(array_keys($characterGroups) as $groupName) {
+		if(!isset($options[$groupName]) || false !== $options[$groupName]) {
+			$selectedGroups[] = $groupName;
+		}
 	}
 	
 	$countGroups = count($selectedGroups);
@@ -35,19 +28,30 @@ function generatePassword($options = array()) {
 		$length = rand(8, 20);
 	}
 	
-	$password = '';
+	$password = array();
 	
-	while(strlen($password) < $length) {
+	$i = 0;
+	
+	while(count($password) < $length) {
 		//choose character group
-		$group	= $selectedGroups[rand(0, $countGroups - 1)];
-		$chars	= $characterGroups[$group];
+		$chars	= $characterGroups[$selectedGroups[$i]];
 		$char	= $chars[rand(0, count($chars) - 1)];
-		
-		$password .= $char;
-	}
 
-	return $password;
+		do {
+			$characterPosition = rand(0, $length - 1);
+		} while(!empty($password[$characterPosition]));
+		
+		$password[$characterPosition] = $char;
+		
+		if($i < count($selectedGroups) - 1) {
+			$i++;
+		} else {
+			$i = 0;
+		}
+		
+	}
+	return implode('', $password);
 }
 
-echo generatePassword(array('specials' => false)) . PHP_EOL;
+echo generatePassword(array('specials' => false, 'length' => 16 )) . PHP_EOL;
 ?>
